@@ -7,6 +7,7 @@ import com.google.android.exoplayer2.source.MediaSource
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import android.widget.ImageView
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -53,6 +54,15 @@ class MainActivity : AppCompatActivity() {
         exoPlayerInstance.prepare(mediaSource, true, false)
         videoPlayer.player.playWhenReady = true
         videoPlayer.player.seekTo(0)
+        videoPlayer.hideController()
+
+        findViewById<ImageView>(R.id.img_btn).setOnClickListener {
+            videoPlayer.player.seekTo(40 * 1000)
+        }
+
+        findViewById<ImageView>(R.id.img_btn2).setOnClickListener {
+            videoPlayer.player.seekTo(0 * 1000)
+        }
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
@@ -104,8 +114,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        videoPlayer.player.release()
+        videoPlayer.player.let {
+            it.release()
+        }
         super.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        videoPlayer.player.release()
+        super.onBackPressed()
     }
 
     companion object{
